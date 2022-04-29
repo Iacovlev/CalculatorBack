@@ -2,8 +2,8 @@ package com.example.CalcBack2;
 
 import com.example.CalcBack2.DTO.ResultDTO;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.Accessors;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -49,16 +48,15 @@ class CalcBack2ApplicationTests {
 	public void setUp(){
 		RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
 		serverURL = String.format("%s:%s", "localhost", port);
-
 	}
 	
 	@Test
-	void save() {
+	@DisplayName("input = 58*63 expected = 3654.0 ")
+	void expected_3654_Result() {
 		ResultDTO resultDTO = new ResultDTO();
 		resultDTO.setInput("58*63");
 
-
-		ResultDTO save = this.webTestClient
+		ResultDTO result = this.webTestClient
 				.post()
 				.uri(serverURL + "/api/service/result/")
 				.contentType(APPLICATION_JSON)
@@ -70,19 +68,18 @@ class CalcBack2ApplicationTests {
 				.returnResult()
 				.getResponseBody();
 
-
-		assertNotNull(save);
-		assertEquals("3654.0", save.getResult());
+		assertNotNull(result);
+		assertEquals("3654.0", result.getResult());
 
 	}
 
 	@Test
-	void save2() {
+	@DisplayName("input = (2+2)*2 expected = 8.0")
+	void expected_8_Result() {
 		ResultDTO resultDTO = new ResultDTO();
 		resultDTO.setInput("(2+2)*2");
 
-
-		ResultDTO save2 = this.webTestClient
+		ResultDTO result2 = this.webTestClient
 				.post()
 				.uri(serverURL + "/api/service/result/")
 				.contentType(APPLICATION_JSON)
@@ -94,18 +91,17 @@ class CalcBack2ApplicationTests {
 				.returnResult()
 				.getResponseBody();
 
-
-		assertNotNull(save2);
-		assertEquals("8.0", save2.getResult());
+		assertNotNull(result2);
+		assertEquals("8.0", result2.getResult());
 	}
 
 	@Test
-	void save3 () {
+	@DisplayName("input = 7*0 expected = 0.0")
+	void expected_0_Result () {
 		ResultDTO resultDTO = new ResultDTO();
 		resultDTO.setInput("7*0");
 
-
-		ResultDTO save3 = this.webTestClient
+		ResultDTO result3 = this.webTestClient
 				.post()
 				.uri(serverURL + "/api/service/result/")
 				.contentType(APPLICATION_JSON)
@@ -117,18 +113,17 @@ class CalcBack2ApplicationTests {
 				.returnResult()
 				.getResponseBody();
 
-
-		assertNotNull(save3);
-		assertEquals("0.0", save3.getResult());
+		assertNotNull(result3);
+		assertEquals("0.0", result3.getResult());
 	}
 
 	@Test
-	void save4() {
+	@DisplayName("input = 75.64+53.12 expected = 128.76")
+	void expected_128_Result() {
 		ResultDTO resultDTO = new ResultDTO();
 		resultDTO.setInput("75.64+53.12");
 
-
-		ResultDTO save4 = this.webTestClient
+		ResultDTO result4 = this.webTestClient
 				.post()
 				.uri(serverURL + "/api/service/result/")
 				.contentType(APPLICATION_JSON)
@@ -140,19 +135,17 @@ class CalcBack2ApplicationTests {
 				.returnResult()
 				.getResponseBody();
 
-
-		assertNotNull(save4);
-		assertEquals("128.76", save4.getResult());
-
+		assertNotNull(result4);
+		assertEquals("128.76", result4.getResult());
 	}
 
 	@Test
-	void save5() {
+	@DisplayName("input = (676*21)/(2+34) expected = 26.6")
+	void expected_26_and_6_Result() {
 		ResultDTO resultDTO = new ResultDTO();
-		resultDTO.setInput("(76*21)/(26+34)");
+		resultDTO.setInput("(676*21)/(2+34)");
 
-
-		ResultDTO save5 = this.webTestClient
+		ResultDTO result5 = this.webTestClient
 				.post()
 				.uri(serverURL + "/api/service/result/")
 				.contentType(APPLICATION_JSON)
@@ -164,18 +157,14 @@ class CalcBack2ApplicationTests {
 				.returnResult()
 				.getResponseBody();
 
-
-		assertNotNull(save5);
-		assertEquals("26.6", save5.getResult());
-
+		assertNotNull(result5);
+		assertEquals("26.6", result5.getResult());
 	}
 
 
 	@ParameterizedTest
 	@ValueSource (strings = {""," ", "+++", "---"})
 	@NullSource
-
-	@Test
 	void Test(String input) {
 		ResultDTO resultDTO = new ResultDTO();
 		resultDTO.setInput(input);
@@ -192,7 +181,6 @@ class CalcBack2ApplicationTests {
 					.expectBody(ResultDTO.class)
 					.returnResult()
 					.getResponseBody();
-
 		});
 	}
 
@@ -214,7 +202,6 @@ class CalcBack2ApplicationTests {
 				.getResponseBody();
 
 		assertNotNull(save);
-
-
+		assertEquals("8", resultDTO.getResult());
 	}
 }

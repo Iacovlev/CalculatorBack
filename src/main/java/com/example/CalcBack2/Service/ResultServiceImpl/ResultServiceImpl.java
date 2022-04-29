@@ -9,104 +9,76 @@ import org.modelmapper.ModelMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.*;
-import javax.script.*;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class ResultServiceImpl implements ResultService {
     private final ModelMapper modelMapper;
     private final ResultRepository repository;
 
-
-
     @Override
-    public ResultDTO
-    save(ResultCreateDTO resultCreateDTO) {
+    public ResultDTO save(ResultCreateDTO resultCreateDTO) {
        resultCreateDTO.setResult(getResult(resultCreateDTO.getInput()));
         Result savedResult = repository.save(modelMapper.map(resultCreateDTO, Result.class));
         return modelMapper.map(savedResult, ResultDTO.class);
     }
 
     @Override
-    public ResultDTO update(ResultDTO resultDTO) {
-        return null;
-    }
-
-    @Override
-    public boolean delete(Long resultId) {
-        return false;
-    }
-
-    @Override
-    public List<ResultDTO> getAll() {
-        return null;
-    }
-
-    @Override
     public ResultDTO getById(Long id) throws Exception {
         Optional<Result> optionalResult = repository.findById(id);
         if (optionalResult.isEmpty()) {
-            throw new Exception(String.format("Profile with id %s not found", id));
+            throw new Exception(String.format("Not a number", id));
         }
         return modelMapper.map(optionalResult.get(), ResultDTO.class);
     }
 
 
-
-    public String getResult(String input) {
-        String exp = input;
-
-        String a = ExpressionToRPN(exp);
-
-        String result = String.valueOf(RpnToAnswer(a));
-
-        return result;
+    private String getResult(String input) {
+        return String.valueOf(rpnToAnswer(expressionToRPN(input)));
     }
-    public static String ExpressionToRPN(String Expr) {
-        String current = "";
+
+    private String expressionToRPN(String expr) {
+        StringBuilder current = new StringBuilder();
         Stack<Character> stack = new Stack<>();
 
         int priority;
-        for(int i = 0; i < Expr.length(); i++){
-         priority = getP(Expr.charAt(i));
+        for(int i = 0; i < expr.length(); i++){
+             priority = getPriority(expr.charAt(i));
 
-         if (priority == 0) {
-             current += Expr.charAt(i);
-         }
-         if (priority == 1) {
-             stack.push(Expr.charAt(i));
-         }
-         if (priority > 1) {
-             current += ' ';
-             while (!stack.isEmpty()) {
-                 if (getP(stack.peek()) >= priority) {
-                     current += stack.pop();
-                 } else break;
+             if (priority == 0) {
+                 current.append(expr.charAt(i));
              }
-             stack.push(Expr.charAt(i));
-         }
-
-         if (priority == -1) {
-             current += ' ';
-             while(getP(stack.peek()) !=1) {
-                 current+=stack.pop();
+             if (priority == 1) {
+                 stack.push(expr.charAt(i));
              }
-             stack.pop();
-         }
+             if (priority > 1) {
+                 current.append(' ');
+                 while (!stack.isEmpty()) {
+                     if (getPriority(stack.peek()) >= priority) {
+                         current.append(stack.pop());
+                     } else break;
+                 }
+                 stack.push(expr.charAt(i));
+             }
 
+             if (priority == -1) {
+                 current.append(' ');
+                 while(getPriority(stack.peek()) !=1) {
+                     current.append(stack.pop());
+                 }
+                 stack.pop();
+             }
         }
 
         while(!stack.empty()) {
-            current += stack.pop();
+            current.append(stack.pop());
         }
 
-        return current;
+        return current.toString();
     }
 
-    public static double RpnToAnswer (String rpm) {
+    private double rpnToAnswer(String rpm) {
         String operand = new String();
         Stack<Double> stack = new Stack<>();
 
@@ -114,28 +86,25 @@ public class ResultServiceImpl implements ResultService {
             if (rpm.charAt(i) == ' ') {
                 continue;
             }
-            if (getP(rpm.charAt(i)) == 0) {
-                while(rpm.charAt(i) != ' ' && getP(rpm.charAt(i)) == 0) {
+            if (getPriority(rpm.charAt(i)) == 0) {
+                while(rpm.charAt(i) != ' ' && getPriority(rpm.charAt(i)) == 0) {
                     operand += rpm.charAt(i++);
                     if (i == rpm.length()) break;
                 }
                 stack.push(Double.parseDouble(operand));
                 operand = new String();
             }
-            if (getP(rpm.charAt(i)) > 1) {
+            if (getPriority(rpm.charAt(i)) > 1) {
                 double a =stack.pop();
                 double b = stack.pop();
 
                 if (rpm.charAt(i) == '+') {
                     stack.push(b+a);
-                }
-                if (rpm.charAt(i) == '-') {
+                }else if (rpm.charAt(i) == '-') {
                     stack.push(b-a);
-                }
-                if (rpm.charAt(i) == '*') {
+                }else if (rpm.charAt(i) == '*') {
                     stack.push(b*a);
-                }
-                if (rpm.charAt(i) == '/') {
+                }else if (rpm.charAt(i) == '/') {
                     stack.push(b/a);
                 }
             }
@@ -143,7 +112,7 @@ public class ResultServiceImpl implements ResultService {
         return stack.pop();
     }
 
-    private static int getP(char token) {
+    private int getPriority(char token) {
         if (token == '*' || token == '/') {
             return 3;
         }else if(token == '+' || token == '-') {
@@ -154,7 +123,6 @@ public class ResultServiceImpl implements ResultService {
             return -1;
         } else return 0;
     }
-
 }
 
 

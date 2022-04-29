@@ -9,12 +9,5 @@ import java.util.List;
 public interface ResultService {
     ResultDTO save(ResultCreateDTO resultDTO) throws Exception;
 
-    ResultDTO update(ResultDTO resultDTO);
-
-    boolean delete(Long resultId);
-
-    List<ResultDTO> getAll();
-
     ResultDTO getById(Long id) throws Exception;
-
 }
