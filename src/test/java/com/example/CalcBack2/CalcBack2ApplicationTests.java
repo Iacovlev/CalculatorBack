@@ -166,7 +166,7 @@ class CalcBack2ApplicationTests {
 	@DisplayName("Cath come errors")
 	@ValueSource (strings = {""," ", "+++", "---"})
 	@NullSource
-	void cath_some_errors(String input) {
+	void cathSomeErrors(String input) {
 		ResultDTO resultDTO = new ResultDTO();
 		resultDTO.setInput(input);
 
