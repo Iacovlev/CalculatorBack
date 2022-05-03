@@ -1,8 +1,8 @@
-package com.example.CalcBack2.Controller;
+package com.example.CalcBack2.controller;
 
-import com.example.CalcBack2.DTO.ResultCreateDTO;
-import com.example.CalcBack2.DTO.ResultDTO;
-import com.example.CalcBack2.Service.ResultService;
+import com.example.CalcBack2.dto.ResultCreateDTO;
+import com.example.CalcBack2.dto.ResultDTO;
+import com.example.CalcBack2.service.ResultService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

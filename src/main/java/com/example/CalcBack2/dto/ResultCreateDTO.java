@@ -1,4 +1,4 @@
-package com.example.CalcBack2.DTO;
+package com.example.CalcBack2.dto;
 
 import lombok.Data;
 

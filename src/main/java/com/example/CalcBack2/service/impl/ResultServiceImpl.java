@@ -1,10 +1,10 @@
-package com.example.CalcBack2.Service.ResultServiceImpl;
+package com.example.CalcBack2.service.impl;
 
-import com.example.CalcBack2.DTO.ResultCreateDTO;
-import com.example.CalcBack2.DTO.ResultDTO;
-import com.example.CalcBack2.Entity.Result;
-import com.example.CalcBack2.Repository.ResultRepository;
-import com.example.CalcBack2.Service.ResultService;
+import com.example.CalcBack2.dto.ResultCreateDTO;
+import com.example.CalcBack2.dto.ResultDTO;
+import com.example.CalcBack2.entity.Result;
+import com.example.CalcBack2.repository.ResultRepository;
+import com.example.CalcBack2.service.ResultService;
 import org.modelmapper.ModelMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

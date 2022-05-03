@@ -1,4 +1,4 @@
-package com.example.CalcBack2.Entity;
+package com.example.CalcBack2.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

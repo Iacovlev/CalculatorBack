@@ -1,6 +1,6 @@
 package com.example.CalcBack2;
 
-import com.example.CalcBack2.DTO.ResultDTO;
+import com.example.CalcBack2.dto.ResultDTO;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -163,9 +163,10 @@ class CalcBack2ApplicationTests {
 
 
 	@ParameterizedTest
+	@DisplayName("Cath come errors")
 	@ValueSource (strings = {""," ", "+++", "---"})
 	@NullSource
-	void Test(String input) {
+	void cath_some_errors(String input) {
 		ResultDTO resultDTO = new ResultDTO();
 		resultDTO.setInput(input);
 
@@ -185,6 +186,7 @@ class CalcBack2ApplicationTests {
 	}
 
 	@Test
+	@DisplayName("getResultById")
 	void getById() {
 		ResultDTO resultDTO = new ResultDTO();
 		resultDTO.setInput("(2+2)*2");
