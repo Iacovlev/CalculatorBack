@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +32,13 @@ public class ResultServiceImpl implements ResultService {
             throw new Exception(String.format("Not a number", id));
         }
         return modelMapper.map(optionalResult.get(), ResultDTO.class);
+    }
+
+    @Override
+    public List<ResultDTO> getAll() {
+        return repository.findAll().stream()
+                .map(result -> modelMapper.map(result, ResultDTO.class))
+                .collect(Collectors.toList());
     }
 
 
@@ -122,6 +130,11 @@ public class ResultServiceImpl implements ResultService {
         } else if (token == ')') {
             return -1;
         } else return 0;
+    }
+
+    @Override
+    public void deleteAll() {
+        repository.deleteAll();
     }
 }
 
